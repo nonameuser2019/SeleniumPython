@@ -27,3 +27,4 @@ def test_switch_to_iframe(browser):
     title = browser.find_element(By.CSS_SELECTOR, title_selector).text
     assert title == expected_iframe_title
 
+
