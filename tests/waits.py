@@ -26,3 +26,4 @@ def test_until_btn_will_be_visible(browser):
     browser.get(__url)
     WebDriverWait(browser, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, visible_after_btn_loc)))
     #you need to pay attention on 2 parameters for EC func
+    
