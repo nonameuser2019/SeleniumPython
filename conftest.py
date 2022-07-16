@@ -5,6 +5,11 @@ from selenium.webdriver import ChromeOptions
 from selenium.webdriver import FirefoxOptions
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
+import logging
+
+
+logging.basicConfig(filename='logs.log', format='%(asctime)s %(message)s', level=logging.INFO)
+loger = logging.getLogger(__name__)
 
 
 def pytest_addoption(parser):
@@ -73,10 +78,15 @@ def create_local_driver(config):
         driver_manager = ChromeDriverManager()
         options = get_chrome_options(config)
         driver = webdriver.Chrome(executable_path=driver_manager.install(), options=options)
+        loger.info('Chrome browser was started')
     elif config["browser"] == "firefox":
         driver_manager = GeckoDriverManager()
         options = get_firefox_options(config)
         driver = webdriver.Firefox(executable_path=driver_manager.install(), options=options)
+        loger.info('Firefox browser was started')
+    else:
+        loger.error('Wrong browser name')
+        raise TypeError
     return driver
 
 
@@ -92,6 +102,8 @@ def driver(request, config):
     def tear_down():
         if request.node.rep_call.failed:
             allure.attach(driver.get_screenshot_as_png(), attachment_type=allure.attachment_type.PNG)
+
+        loger.info('Browser was closed')
         driver.quit()
 
     request.addfinalizer(tear_down)
